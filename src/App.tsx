@@ -3,8 +3,18 @@
 import { StrictMode, useCallback } from 'react';
 // Import DOM rendering functionality
 import { createRoot } from 'react-dom/client';
+import { useState } from "react"; // 👈 add this for mobile menue enable 
+
+
+
+
 // Import icon components from Lucide React library
-import { Gift, Heart, Star, Sparkles, Phone, Mail, MapPin, Clock, Users, Award } from 'lucide-react';
+// import { Gift, Heart, Star, Sparkles, Phone, Mail, MapPin, Clock, Users, Award } from 'lucide-react';
+// ******* NEW CODE START (MOBILE NAV ICON IMPORTS ADDED: Menu, X) *******
+// We’re keeping the original import above as a reference and adding Menu & X for the hamburger open/close icons.
+import { Gift, Heart, Star, Sparkles, Phone, Mail, MapPin, Clock, Users, Award, Menu, X } from 'lucide-react';
+// ******* NEW CODE END *******
+
 // Import global CSS styles
 import './index.css';
 // Import local image asset for background
@@ -48,7 +58,10 @@ export default function App() {
   const scrollToContact = useCallback(() => {
     const section = document.getElementById("contact");
     if (section) section.scrollIntoView({ behavior: "smooth" });
+
   }, []);
+  
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // 👈 add here
 
   // ===================== COMPONENT RENDER =====================
   return (
@@ -80,8 +93,63 @@ export default function App() {
               {/* Contact navigation button with hover effect */}
               <button onClick={scrollToContact} className="text-gray-700 hover:text-amber-600 transition-colors">Contact</button>
             </nav>
+
+            {/* ******* NEW CODE START (MOBILE NAV: HAMBURGER TOGGLER) *******
+                - Shows only on small screens (md:hidden)
+                - Toggles the mobile menu open/close state
+                - Uses lucide-react Menu (open) and X (close) icons
+                - Safe to reuse: copy this button and the mobile drawer below to any project
+            */}
+            <button
+              type="button"
+              className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-600"
+              aria-label="Open main menu"
+              aria-expanded={isMenuOpen}
+              onClick={() => setIsMenuOpen(prev => !prev)}
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+            {/* ******* NEW CODE END ******* */}
           </div>
         </div>
+
+        {/* ******* NEW CODE START (MOBILE NAV: SLIDE-DOWN MENU) *******
+            - Renders only when `isMenuOpen` is true
+            - Hidden on md and above (mobile-only)
+            - Each item calls the same smooth-scroll handlers you already use
+            - IMPORTANT: closes the drawer after navigating (setIsMenuOpen(false))
+        */}
+        {isMenuOpen && (
+          <div className="md:hidden border-t border-rose-200 bg-rose-50">
+            <div className="px-4 py-3 space-y-2">
+              <button
+                className="block w-full text-left px-3 py-2 rounded-lg text-gray-800 hover:bg-rose-100"
+                onClick={() => { scrollToServices(); setIsMenuOpen(false); }}
+              >
+                Services
+              </button>
+              <button
+                className="block w-full text-left px-3 py-2 rounded-lg text-gray-800 hover:bg-rose-100"
+                onClick={() => { scrollToGallery(); setIsMenuOpen(false); }}
+              >
+                Gallery
+              </button>
+              <button
+                className="block w-full text-left px-3 py-2 rounded-lg text-gray-800 hover:bg-rose-100"
+                onClick={() => { scrollToScrollToAbout(); setIsMenuOpen(false); }}
+              >
+                About
+              </button>
+              <button
+                className="block w-full text-left px-3 py-2 rounded-lg text-gray-800 hover:bg-rose-100"
+                onClick={() => { scrollToContact(); setIsMenuOpen(false); }}
+              >
+                Contact
+              </button>
+            </div>
+          </div>
+        )}
+        {/* ******* NEW CODE END ******* */}
       </header>
 
       {/* ================= HERO SECTION ================= */}
@@ -478,3 +546,4 @@ export default function App() {
     </div>
   );
 }
+
