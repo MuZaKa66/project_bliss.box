@@ -60,6 +60,13 @@ export default function App() {
     if (section) section.scrollIntoView({ behavior: "smooth" });
 
   }, []);
+/******FindUs */
+
+
+
+
+
+
   
   const [isMenuOpen, setIsMenuOpen] = useState(false); // 👈 add here
 
@@ -92,7 +99,15 @@ export default function App() {
               
               {/* Contact navigation button with hover effect */}
               <button onClick={scrollToContact} className="text-gray-700 hover:text-amber-600 transition-colors">Contact</button>
+            {/******Findus */}
+            <button onClick={scrollToContact} className="text-gray-700 hover:text-amber-600 transition-colors">FindUs</button>
+            {/** */}
+            
             </nav>
+
+
+
+
 
             {/* ******* NEW CODE START (MOBILE NAV: HAMBURGER TOGGLER) *******
                 - Shows only on small screens (md:hidden)
@@ -113,7 +128,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* ******* NEW CODE START (MOBILE NAV: SLIDE-DOWN MENU) *******
+        {/* ******* NEW CODE START (MOBILE NAV: SLIDE-DOWN MENUfull) *******
             - Renders only when `isMenuOpen` is true
             - Hidden on md and above (mobile-only)
             - Each item calls the same smooth-scroll handlers you already use
@@ -503,6 +518,7 @@ export default function App() {
             </div>
 
             {/* Address/Location information */}
+
             <div className="text-center">
               <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MapPin className="h-8 w-8 text-white" />
@@ -510,6 +526,65 @@ export default function App() {
               <h3 className="text-xl font-semibold mb-2">Visit Us</h3>
               <p className="text-gray-300">BlissBox<br />Lane no A1, Sector F <br />Bahria Town , Phase - 7, Rawalpindi</p>
             </div>  
+{/* ---------------- New Code: Embedded Google Map ---------------- */}
+{/* This block displays a pinned and searchable Google Map at your address */}
+{/* ---------------- Google Map + Smart Get Directions Button ---------------- */}
+
+
+<div className="mt-6">
+  <iframe
+    title="BlissBox Location"
+
+    // Google Maps Embed URL for pinned location
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3326.2799746689984!2d73.0886730321959!3d33.52010570415764!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38dfed0008bcc94b%3A0x517176991f9d3dce!2sBlissBox!5e0!3m2!1sen!2s!4v1757087856978!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+    width="100%"          // Full width of container
+    height="150"          // Height of map
+    style={{ border: 0 }} // No border around iframe
+    allowFullScreen    // Allow fullscreen map
+    loading="lazy"        // Optimize loading performance
+    referrerPolicy="no-referrer-when-downgrade" // Security best practice
+  ></iframe>
+</div>
+{/* ---------------- Smart Get Directions Button ---------------- */}
+<div className="mt-4 text-center">
+  <button
+    onClick={() => {
+      // 📍 Set destination coordinates (your workplace location)
+      const destination = "33.52007439822961, 73.09123722435284"; 
+
+      // ✅ Check if browser supports geolocation
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            // 🎯 User allowed location access → build URL with origin + destination
+            const { latitude, longitude } = position.coords;
+            const directionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${destination}`;
+            
+            // 🔗 Open in a new tab → will launch Google Maps (browser or app)
+            window.open(directionsUrl, "_blank");
+          },
+          () => {
+            // ⚠️ If user denies or location fails → fallback to only destination
+            const fallbackUrl = `https://www.google.com/maps/dir/?api=1&destination=${destination}`;
+            window.open(fallbackUrl, "_blank");
+          }
+        );
+      } else {
+        // 🚫 If browser does not support geolocation → fallback
+        const fallbackUrl = `https://www.google.com/maps/dir/?api=1&destination=${destination}`;
+        window.open(fallbackUrl, "_blank");
+      }
+    }}
+    className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+  >
+    FindUs :)
+  </button>
+</div>
+
+
+
+
+
 
             {/* Business hours information */}
             <div className="text-center">
@@ -517,7 +592,7 @@ export default function App() {
                 <Clock className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Hours</h3>
-              <p className="text-gray-300">Coming Soon</p>        
+              <p className="text-gray-300">7 days a week 12pm to 12am</p>        
             </div>
           </div>
         </div>
